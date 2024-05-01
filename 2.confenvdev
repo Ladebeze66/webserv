@@ -1,0 +1,68 @@
+Pour configurer l'environnement de développement et préparer un Makefile approprié pour votre projet de serveur web en C++, il est crucial de structurer le Makefile de manière à optimiser le processus de compilation, tout en respectant les directives strictes de compilation. Utiliser les options -Wall -Wextra -Werror -std=c++98 assure que votre code est non seulement conforme à la norme C++98, mais aussi qu'il est exempt d'erreurs et de warnings communs, ce qui peut aider à détecter des problèmes potentiels très tôt dans le processus de développement.
+
+Points Clés du Makefile
+
+Flags de Compilation :
+-Wall -Wextra -Werror : Ces options activent les avertissements supplémentaires et transforment tous les avertissements en erreurs, forçant une résolution immédiate de ces avertissements pour continuer.
+-std=c++98 : Spécifie la norme du langage à utiliser, garantissant que votre code est compatible avec C++98.
+
+Structuration du Makefile :
+Règles standards : all, clean, fclean, re, et le nom de votre programme.
+Dépendances : Spécifier correctement les dépendances pour chaque fichier objet afin que le système de compilation sache quel fichier recompiler en cas de changement.
+Gestion des dossiers : Organiser vos fichiers source et objet dans des dossiers appropriés pour maintenir la structure du projet propre et ordonnée.
+
+Exemple de Makefile
+Voici un exemple de Makefile qui pourrait être utilisé pour votre projet de serveur web en C++ :
+
+# Nom du binaire à compiler
+NAME = webserv
+
+# Compilateur C++
+CXX = g++
+
+# Flags de compilation
+CXXFLAGS = -Wall -Wextra -Werror -std=c++98
+
+# Dossiers
+SRC_DIR = src
+OBJ_DIR = obj
+INC_DIR = include
+
+# Fichiers source
+SRCS = $(wildcard $(SRC_DIR)/*.cpp)
+
+# Fichiers objet correspondants
+OBJS = $(SRCS:$(SRC_DIR)/%.cpp=$(OBJ_DIR)/%.o)
+
+# Commande all
+all: $(NAME)
+
+# Règle pour créer le binaire
+$(NAME): $(OBJS)
+	$(CXX) $(OBJS) -o $@
+
+# Règle pour créer les fichiers objet
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
+	@mkdir -p $(OBJ_DIR)
+	$(CXX) $(CXXFLAGS) -I$(INC_DIR) -c $< -o $@
+
+# Commande clean pour supprimer les fichiers objet
+clean:
+	rm -rf $(OBJ_DIR)
+
+# Commande fclean pour supprimer les fichiers objet et le binaire
+fclean: clean
+	rm -f $(NAME)
+
+# Commande re pour recompiler tout
+re: fclean all
+
+# Empêcher make de confondre les noms de commande avec des fichiers
+.PHONY: all clean fclean re
+
+Points Importants
+
+Dossiers Séparés : Ce Makefile suppose que vos fichiers source .cpp sont dans un dossier src, les en-têtes .h dans include, et les fichiers objet .o seront placés dans obj.
+
+Règles Phony : Les règles comme all, clean, fclean, et re sont déclarées comme phony pour éviter des conflits avec des fichiers de même nom.
+Création Automatique de Dossier : Le Makefile crée automatiquement le dossier pour les fichiers objet si ce n'est pas déjà fait, ce qui est pratique pour maintenir l'ordre.
