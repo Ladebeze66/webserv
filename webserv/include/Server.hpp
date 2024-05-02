@@ -6,36 +6,26 @@
 /*   By: fgras-ca <fgras-ca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/01 15:50:29 by fgras-ca          #+#    #+#             */
-/*   Updated: 2024/05/01 16:49:07 by fgras-ca         ###   ########.fr       */
+/*   Updated: 2024/05/02 17:06:03 by fgras-ca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef SERVER_HPP
 #define SERVER_HPP
 
-#include "Request.hpp"
-#include "Response.hpp"
 #include "Router.hpp"
-#include <netinet/in.h>
-#include <iostream>
-#include <cstring>
-#include <unistd.h>
-#include <sys/socket.h>
-#include <cstdio>  // Pour perror
-#include <cstdlib> // Pour exit et EXIT_FAILURE
+#include <string>
 
-class Server
-{
-	public:
-		Server(int port);
-		~Server();
-		void run();
+class Server {
+public:
+    Server(const std::string& configPath);
+    void run();
 
-	private:
-		int server_fd;
-		sockaddr_in address;
-		Router router;
-		void handleConnection(int clientSocket);
+private:
+    int port;
+    std::string host;
+    Router router;
+    void initialize(const std::string& configPath);
 };
 
-#endif
+#endif // SERVER_HPP
